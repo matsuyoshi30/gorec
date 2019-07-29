@@ -8,9 +8,10 @@ import (
 	"image/draw"
 	"time"
 
+	"github.com/golang/freetype/truetype"
 	"github.com/mattn/go-libvterm"
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/gofont/gomonobold"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -56,7 +57,10 @@ func (t *TW) Play() error {
 				}
 				chars := cell.Chars()
 				if len(chars) > 0 && chars[0] != 0 {
-					drawChar(img, (col+1)*7, (row+1)*13, cell.Fg(), string(chars))
+					err = drawChar(img, (col+1)*7, (row+1)*13, cell.Fg(), string(chars))
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
@@ -71,13 +75,29 @@ func (t *TW) Play() error {
 	return nil
 }
 
-func drawChar(img *image.RGBA, x, y int, c color.Color, text string) {
+func drawChar(img *image.RGBA, x, y int, c color.Color, text string) error {
+	ft, err := truetype.Parse(gomonobold.TTF)
+	if err != nil {
+		return err
+	}
+	opt := truetype.Options{
+		Size:              0,
+		DPI:               0,
+		Hinting:           0,
+		GlyphCacheEntries: 0,
+		SubPixelsX:        0,
+		SubPixelsY:        0,
+	}
+	face := truetype.NewFace(ft, &opt)
+
 	point := fixed.Point26_6{fixed.Int26_6(x * 64), fixed.Int26_6(y * 64)}
 	d := &font.Drawer{
 		Dst:  img,
 		Src:  image.NewUniform(c),
-		Face: basicfont.Face7x13,
+		Face: face,
 		Dot:  point,
 	}
 	d.DrawString(text)
+
+	return nil
 }
