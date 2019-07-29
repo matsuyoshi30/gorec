@@ -11,6 +11,10 @@ $ ./gorec [-o output filename] [-l]
 
 ![](./_res/demo.gif)
 
+sl
+
+![](./_res/sl.gif)
+
 ##### Option
 
 | flag | Usage |
