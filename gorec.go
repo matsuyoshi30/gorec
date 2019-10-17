@@ -14,12 +14,13 @@ type TW struct {
 	recdata        []*RecData
 	images         []*image.Paletted
 	delays         []int
+	bold           bool
 }
 
 func main() {
 	o := parseFlag(os.Args[1:]...)
 
-	tw, err := Rec(o.output, o.login)
+	tw, err := Rec(o.output, o.login, o.bold)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 	}

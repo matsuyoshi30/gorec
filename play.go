@@ -12,6 +12,7 @@ import (
 	"github.com/mattn/go-libvterm"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/gomonobold"
+	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -57,7 +58,7 @@ func (t *TW) Play() error {
 				}
 				chars := cell.Chars()
 				if len(chars) > 0 && chars[0] != 0 {
-					err = drawChar(img, (col+1)*7, (row+1)*13, cell.Fg(), string(chars))
+					err = drawChar(img, (col+1)*7, (row+1)*13, cell.Fg(), string(chars), t.bold)
 					if err != nil {
 						return err
 					}
@@ -75,8 +76,13 @@ func (t *TW) Play() error {
 	return nil
 }
 
-func drawChar(img *image.RGBA, x, y int, c color.Color, text string) error {
-	ft, err := truetype.Parse(gomonobold.TTF)
+func drawChar(img *image.RGBA, x, y int, c color.Color, text string, bold bool) error {
+	fnt := goregular.TTF
+	if bold {
+		fnt = gomonobold.TTF
+	}
+
+	ft, err := truetype.Parse(fnt)
 	if err != nil {
 		return err
 	}
