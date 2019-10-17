@@ -15,14 +15,12 @@ VERSION:
 GLOBAL OPTIONS:
   -o              set output filename
   -l              use login shell
-  -b              use bold font style
   --help, -h      show help
 `
 
 type Option struct {
 	output string
 	login  bool
-	bold   bool
 }
 
 func parseFlag(args ...string) *Option {
@@ -33,8 +31,7 @@ func parseFlag(args ...string) *Option {
 
 	out := fs.String("o", "output", "set output filename")
 	l := fs.Bool("l", false, "use login shell")
-	b := fs.Bool("b", false, "use bold font style")
 	fs.Parse(args)
 
-	return &Option{output: *out, login: *l, bold: *b}
+	return &Option{output: *out, login: *l}
 }
