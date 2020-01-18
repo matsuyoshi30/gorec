@@ -18,7 +18,7 @@ type RecData struct {
 	encdata string
 }
 
-func Rec(dstFile string, login bool) (*TW, error) {
+func Rec(dstFile string, login bool, bold bool) (*TW, error) {
 	var c *exec.Cmd
 	if login {
 		c = exec.Command(os.Getenv("SHELL"), "-i", "-l")
@@ -59,6 +59,8 @@ func Rec(dstFile string, login bool) (*TW, error) {
 		io.Copy(tm, os.Stdin)
 	}()
 	c.Wait()
+
+	tw.bold = bold
 
 	return tw, nil
 }
